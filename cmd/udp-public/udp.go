@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -27,7 +26,11 @@ func main() {
 		if strings.LastIndex(str, "TRIGGER") >= 0 {
 			fmt.Println("???????????????????")
 			fmt.Println(addr.String())
-			sendUDP(addr.String(), "OK")
+			res, err := sendUDP(addr.String(), "OK")
+			if err != nil {
+				fmt.Printf("res: %s", res)
+				fmt.Printf("err: %+v", err)
+			}
 		}
 		go serve(listener, addr, buf[:n])
 	}
@@ -45,7 +48,7 @@ func sendUDP(addr, msg string) (string, error) {
 	_, err := conn.Write([]byte(msg))
 	// listen for reply
 	bs := make([]byte, 1024)
-	conn.SetDeadline(time.Now().Add(3 * time.Second))
+	//conn.SetDeadline(time.Now().Add(3 * time.Second))
 	len, err := conn.Read(bs)
 	if err != nil {
 		return "", err

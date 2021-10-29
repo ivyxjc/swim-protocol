@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	l, err := reuseport.ListenPacket("udp", "192.168.32.198:2500")
+	l, err := reuseport.ListenPacket("udp", "0.0.0.0:2500")
 	if err != nil {
 		log.Printf("%+v", err)
 		os.Exit(1)
@@ -19,8 +19,10 @@ func main() {
 	defer l.Close()
 
 	sendUDP("", "TRIGGER")
+	sendUDP("", "TRIGGER")
 
 	for {
+		fmt.Println("++++++")
 		buf := make([]byte, 1024)
 		n, addr, err := l.ReadFrom(buf)
 		if err != nil {
